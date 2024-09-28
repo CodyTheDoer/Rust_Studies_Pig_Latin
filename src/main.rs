@@ -7,15 +7,20 @@ fn main() {
     manual_entry(&mut sentence_vec);
     
     let split_sentence = split_string_on_space_return_multi_part_vec(sentence_vec[0].clone());
-
-    println!("{:?}", split_sentence);
-
+    let mut piggified_sentence = String::new();
     for word in split_sentence {
-        convert_to_pig_latin(word);
+        let word = convert_to_pig_latin(word);
+        let space = " ";
+        println!("{:?}", word);
+        for letter in word {
+            piggified_sentence = piggified_sentence + &letter;
+        }
+        piggified_sentence = piggified_sentence + space;
     }
+    println!("{:?}", piggified_sentence.trim());
 }
 
-fn convert_to_pig_latin(s: String) {
+fn convert_to_pig_latin(s: String) -> Vec<String> {
     let mut clean_float = Vec::new();
     let mut clean_float_symbol_check = Vec::new();
 
@@ -26,13 +31,15 @@ fn convert_to_pig_latin(s: String) {
         }
     }
     
-    println!("Before: {:?}", clean_float);
-
     let mut temp_symbol_hold = Vec::new();
     for i in 0..clean_float_symbol_check.len() {
         if clean_float_symbol_check[i].is_ascii_punctuation() {
-            let vec_data = (clean_float_symbol_check[i], i);
-            temp_symbol_hold.push(vec_data);
+            let mut symbol = Vec::new();
+            let vec_data = clean_float_symbol_check[i].to_string();
+            let vec_index = i.to_string();
+            symbol.push(vec_data);
+            symbol.push(vec_index);
+            temp_symbol_hold.push(symbol);
             clean_float.remove(i);
         }
     }
@@ -47,8 +54,12 @@ fn convert_to_pig_latin(s: String) {
         clean_float.remove(0);
     }
     
-    println!("After: {:?}", clean_float);
-    println!("Symbol: {:?}", temp_symbol_hold);
+    if temp_symbol_hold.len() > 0 {
+        for symbol in temp_symbol_hold {
+            clean_float.insert(symbol[1].parse().expect("Failed to parse..."), symbol[0].clone());
+        }
+    }
+    clean_float
 }
 
 fn split_string_on_space_return_multi_part_vec(s: String) -> Vec<String> {
