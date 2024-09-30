@@ -68,7 +68,9 @@ fn convert_to_pig_latin(s: String) -> Vec<String> {
         if temp_symbol_hold.len() > 0 {
             for symbol in temp_symbol_hold {
                 let mut symbol_index: usize  = symbol[1].parse().expect("Failed to parse...");
-                symbol_index += 4;
+                if symbol[0] != "'" {
+                    symbol_index += 4;
+                }
                 clean_float.insert(symbol_index, symbol[0].clone());
             }
         }
